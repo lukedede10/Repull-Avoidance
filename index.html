@@ -592,7 +592,15 @@
 
     if(backBtn){
       backBtn.addEventListener('click', () => {
+        const previousCard = card.previousElementSibling;
         container.removeChild(card);
+
+        if(previousCard){
+          const prevButtons = previousCard.querySelectorAll('button');
+          prevButtons.forEach(btn => {
+            btn.disabled = false;
+          });
+        }
       });
     }
 
