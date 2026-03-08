@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Repull Avoidance Guide (VMO2)</title>
+  <style>
+    :root{
+      --bg:#07121f;
+      --panel:#0d1b2d;
+      --card:#ffffff;
+      --text:#0b1220;
+      --muted:#64748b;
+      --stroke:#d6dde8;
+
+      --o2:#005EB8;
+      --o2Dark:#004A93;
+      --red:#E4002B;
+      --redDark:#B80022;
+      --green:#0f9f6e;
+      --amber:#f59e0b;
+
+      --radius:24px;
+      --shadow:0 16px 40px rgba(0,0,0,.28);
+      --shadow-soft:0 10px 24px rgba(2,6,23,.10);
+      --max:1400px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#06101b 0%,#0b1930 100%);color:#fff}
+    body{display:flex;flex-direction:column}
+
+    .shell{width:min(var(--max),calc(100% - 24px));margin:0 auto}
+
+    .hero{
+      position:relative;
+      overflow:hidden;
+      padding:20px 0 18px;
+    }
+    .hero::before,
+    .hero::after{
+      content:"";
+      position:absolute;
+      border-radius:999px;
+      filter:blur(10px);
+      opacity:.28;
+      pointer-events:none;
+    }
+    .hero::before{width:240px;height:240px;right:-60px;top:-40px;background:var(--o2)}
+    .hero::after{width:220px;height:220px;left:-80px;bottom:-80px;background:var(--red)}
+
+    .hero-card{
+      position:relative;
+      z-index:1;
+      background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:30px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(8px);
+    }
+
+    .brand-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:16px;
+      flex-wrap:wrap;
+    }
+    .logo-box{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+    .logo-mark{
+      width:42px;height:42px;border-radius:14px;
+      background:linear-gradient(135deg,var(--red),var(--o2));
+      display:grid;place-items:center;font-size:20px;font-weight:700;
+      box-shadow:0 8px 20px rgba(0,0,0,.2);
+    }
+    .tag{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      font-size:13px;color:#e2e8f0;
+    }
+
+    h1{margin:0 0 10px;font-size:clamp(28px,4.5vw,50px);line-height:1.02}
+    .sub{margin:0;color:#dbe7f5;font-size:clamp(15px,2vw,18px);max-width:980px;line-height:1.45}
+
+    .quick-links{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+      margin:18px 0 0;
+    }
+    .quick-link{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:22px;
+      padding:14px;
+      color:#fff;text-decoration:none;
+      transition:.18s ease;
+      min-height:94px;
+    }
+    .quick-link:hover{transform:translateY(-2px);background:rgba(255,255,255,.12)}
+    .quick-link b{display:block;font-size:15px;margin-bottom:6px}
+    .quick-link span{display:block;font-size:13px;color:#d9e5f4;line-height:1.35}
+
+    main{padding:12px 0 36px}
+
+    .top-grid{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:18px;
+      margin-bottom:18px;
+    }
+
+    .card{
+      background:var(--card);
+      color:var(--text);
+      border-radius:28px;
+      box-shadow:var(--shadow-soft);
+      padding:18px;
+      border:1px solid #e8eef7;
+    }
+
+    .card h2,.card h3{margin:0 0 12px}
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      font-size:12px;font-weight:700;letter-spacing:.7px;
+      color:var(--o2);text-transform:uppercase;
+      margin-bottom:10px;
+    }
+
+    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .mini{
+      border:1px solid var(--stroke);
+      border-radius:20px;
+      padding:14px;
+      background:#f8fbff;
+    }
+    .mini h4{margin:0 0 8px;font-size:15px}
+    .mini p{margin:0;color:#475569;font-size:14px;line-height:1.45}
+
+    .pill-list,.check-list,.warn-list{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+    .pill-list li,.check-list li,.warn-list li{
+      border-radius:16px;padding:12px 14px;font-size:14px;line-height:1.45;
+    }
+    .pill-list li{background:#eff6ff;border:1px solid #bfdbfe}
+    .check-list li{background:#f0fdf4;border:1px solid #bbf7d0}
+    .warn-list li{background:#fff7ed;border:1px solid #fed7aa}
+
+    .section-title{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      margin:20px 0 14px;
+      color:#fff;
+    }
+    .section-title h2{margin:0;font-size:clamp(22px,3vw,32px)}
+    .section-title p{margin:0;color:#d7e3f3;font-size:14px}
+
+    .routes{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+    .route-card{padding:0;overflow:hidden}
+    .route-head{
+      padding:18px 18px 14px;
+      color:#fff;
+      background:linear-gradient(135deg,var(--o2) 0%, var(--o2Dark) 100%);
+    }
+    .route-head.red{background:linear-gradient(135deg,var(--red) 0%, var(--redDark) 100%)}
+    .route-head.mix{background:linear-gradient(135deg,var(--o2) 0%, var(--red) 100%)}
+    .route-head.green{background:linear-gradient(135deg,#0a8d63 0%, #0b6b58 100%)}
+    .route-head h3{margin:0 0 8px;font-size:22px}
+    .route-head p{margin:0;color:#eef6ff;font-size:14px;line-height:1.45}
+
+    .route-body{padding:18px}
+    .accordion{display:grid;gap:10px}
+    details{
+      border:1px solid var(--stroke);
+      border-radius:18px;
+      overflow:hidden;
+      background:#fff;
+    }
+    summary{
+      list-style:none;
+      cursor:pointer;
+      padding:14px 16px;
+      font-weight:700;
+      position:relative;
+      font-size:15px;
+      background:#f8fafc;
+    }
+    summary::-webkit-details-marker{display:none}
+    summary::after{
+      content:'+';
+      position:absolute;right:16px;top:50%;transform:translateY(-50%);
+      font-size:22px;color:var(--o2);
+    }
+    details[open] summary::after{content:'–'}
+    .details-content{padding:0 16px 16px}
+    .details-content ul{margin:0;padding-left:18px;color:#334155}
+    .details-content li{margin:8px 0;line-height:1.45}
+
+    .decision-box{
+      margin-top:14px;
+      border:1px solid #dbeafe;
+      border-radius:20px;
+      overflow:hidden;
+      background:#f8fbff;
+    }
+    .decision-head{
+      background:#eaf3ff;
+      color:#0f3f7e;
+      padding:12px 14px;
+      font-weight:700;
+      font-size:14px;
+    }
+    .decision-body{padding:14px}
+    .decision-body ul{margin:0;padding-left:18px;color:#334155}
+    .decision-body li{margin:8px 0;line-height:1.45}
+
+    .footer-note{
+      margin-top:18px;
+      padding:16px 18px;
+      border-radius:20px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      color:#e5eef9;
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    @media (max-width: 1050px){
+      .quick-links,.routes,.top-grid{grid-template-columns:1fr}
+    }
+    @media (max-width: 720px){
+      .shell{width:min(var(--max),calc(100% - 16px))}
+      .hero-card,.card{border-radius:22px}
+      .grid-2{grid-template-columns:1fr}
+      h1{font-size:32px}
+      .route-head h3{font-size:20px}
+      .quick-link{min-height:auto}
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="shell hero-card">
+      <div class="brand-row">
+        <div class="logo-box">
+          <div class="logo-mark">R</div>
+          <div>
+            <div style="font-size:16px;">Repull Avoidance Guide</div>
+            <div style="font-size:12px;color:#d7e3f3;">Field Operations Guidance</div>
+          </div>
+        </div>
+        <div class="tag">Field Operations • Repull Prevention</div>
+      </div>
+
+      <h1>Repull Avoidance</h1>
+      <p class="sub">
+        A mobile-first guidance site focused on avoiding unnecessary repulls and reblows by making the right checks, using the correct recovery actions first, capturing the right evidence, and escalating with a clear rationale only when required.
+      </p>
+
+      <div class="quick-links">
+        <a class="quick-link" href="#oh-xpon">
+          <b>Overhead Maverick XPON Repulls</b>
+          <span>Span, route, existing plant, pull path, obstruction checks and evidence.</span>
+        </a>
+        <a class="quick-link" href="#hfc-repulls">
+          <b>HFC Repulls</b>
+          <span>Existing coax route validation, reuse opportunity, blockages and termination checks.</span>
+        </a>
+        <a class="quick-link" href="#reblows">
+          <b>FTTP / FTTO Reblows</b>
+          <span>Tube integrity, rod/rope recovery, lubrication, distance and access review.</span>
+        </a>
+        <a class="quick-link" href="#ug-xpon">
+          <b>Underground Maverick XPON Repulls</b>
+          <span>Duct route, blockage location, chamber access and civils avoidance controls.</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="shell">
+      <section class="top-grid">
+        <div class="card">
+          <div class="eyebrow">Core Principle</div>
+          <h2>Repull only when recovery options are exhausted</h2>
+          <div class="grid-2">
+            <div class="mini">
+              <h4>1. Validate the route</h4>
+              <p>Confirm the cable path, plant type, entry and exit points, and whether the existing route can still be reused or recovered.</p>
+            </div>
+            <div class="mini">
+              <h4>2. Attempt safe recovery first</h4>
+              <p>Use approved recovery steps before deciding the existing path has failed. Avoid jumping straight to repull or civils requests.</p>
+            </div>
+            <div class="mini">
+              <h4>3. Capture evidence properly</h4>
+              <p>Photographs, blockage location, route condition, access limitations, and what has already been attempted should be recorded clearly.</p>
+            </div>
+            <div class="mini">
+              <h4>4. Escalate with a reason</h4>
+              <p>If a repull is genuinely required, the justification should show why reuse, recovery, reblow or reroute is not viable.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="eyebrow">Before Raising a Repull</div>
+          <h3>Mandatory checks</h3>
+          <ul class="pill-list">
+            <li>Have you confirmed the correct route and that you are working on the right plant / tube / cable?</li>
+            <li>Have you checked whether the issue is localised at the entry point, bend, fitting, Toby, chamber or termination rather than the full route?</li>
+            <li>Have you attempted the approved recovery or re-use steps relevant to that network type?</li>
+            <li>Have you identified the exact point of failure, or at least narrowed it down to a specific section?</li>
+            <li>Have you captured enough evidence for someone else to understand why a repull is needed without revisiting site blindly?</li>
+          </ul>
+        </div>
+      </section>
+
+      <div class="section-title">
+        <h2>Network-specific guidance</h2>
+        <p>Use the relevant section below based on the work type.</p>
+      </div>
+
+      <section class="routes">
+        <article class="card route-card" id="oh-xpon">
+          <div class="route-head mix">
+            <h3>Overhead Maverick XPON Repulls</h3>
+            <p>Focus on route validation, span condition, attachment path and whether the existing overhead route can be recovered before requesting a repull.</p>
+          </div>
+          <div class="route-body">
+            <div class="accordion">
+              <details open>
+                <summary>Checks before considering repull</summary>
+                <div class="details-content">
+                  <ul>
+                    <li>Confirm the cable is on the correct span and follows the intended route from distribution point to premises.</li>
+                    <li>Inspect visible overhead path for snag points, damaged fittings, excessive tension, abrasion or a failed section rather than assuming full-route replacement.</li>
+                    <li>Check entry point condition and whether the issue is actually at the final drop, clip path or customer entry rather than across the entire span.</li>
+                    <li>Validate whether there is an opportunity to recover, resecure or re-route on the existing overhead path within safe working limits.</li>
+                  </ul>
+                </div>
+              </details>
+
+              <details>
+                <summary>Evidence to capture</summary>
+                <div class="details-content">
+                  <ul>
+                    <li>Clear photos of both ends of the overhead path and any visible defect or obstruction.</li>
+                    <li>Photos showing pole / bracket / building attachment points and entry route.</li>
+                    <li>Notes covering what recovery actions were attempted and why they were unsuccessful.</li>
+                    <li>A precise description of whether the failure is at one section, one attachment point or the full route.</li>
+                  </ul>
+                </div>
+              </details>
+
+              <details>
+                <summary>Common avoidable repull triggers</summary>
+                <div class="details-content">
+                  <ul>
+                    <li>Assuming the whole span has failed when the issue is actually at the entry point or final fixing.</li>
+                    <li>Not checking whether the visible obstruction can be safely cleared or bypassed.</li>
+                    <li>Insufficient evidence, resulting in another visit just to confirm the original diagnosis.</li>
+                  </ul>
+                </div>
+              </details>
+            </div>
+
+            <div class="decision-box">
+              <div class="decision-head">Raise repull only if:</div>
+              <div class="decision-body">
+                <ul>
+                  <li>The existing overhead route cannot be safely reused or recovered.</li>
+                  <li>The failed section cannot be isolated to a smaller corrective action.</li>
+                  <li>Your evidence clearly shows why a fresh pull is needed.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card route-card" id="hfc-repulls">
+          <div class="route-head red">
+            <h3>HFC Repulls</h3>
+            <p>Prioritise reuse of the existing route, identify whether the issue is coax, fitting, access or local blockage, and avoid full repulls where the defect is isolated.</p>
+          </div>
+          <div class="route-body">
+            <div class="accordion">
+              <details open>
+                <summary>Checks before considering repull</summary>
+                <div class="details-content">
+                  <ul>
+                    <li>Confirm the existing coax route, termination points and whether the original route remains viable.</li>
+                    <li>Check for localised damage, crushed sections, poor bends, failed fittings or access limitations.</li>
+                    <li>Validate whether the issue is at a single point such as an entry, wall transition, cabinet side or internal termination.</li>
+                    <li>Consider whether partial replacement, rerouting a short section or remaking terminations would resolve the issue.</li>
+                  </ul>
+                </div>
+              </details>
+
+              <details>
+                <summary>Evidence to capture</summary>
+                <div class="details-content">
+                  <ul>
+                    <li>Photos of the full visible route and both ends.</li>
+                    <li>Close-up images of damaged or failed sections.</li>
+                    <li>Notes on continuity / condition findings and what was ruled out.</li>
+                    <li>Any access or route constraints preventing reuse.</li>
+                  </ul>
+                </div>
+              </details>
+
+              <details>
+                <summary>Common avoidable repull triggers</summary>
+                <div class="details-content">
+                  <ul>
+                    <li>Jumping to full replacement before checking fittings and terminations.</li>
+                    <li>Treating an access issue as a cable issue.</li>
+                    <li>Not separating internal route problems from external plant problems.</li>
+                  </ul>
+                </div>
+              </details>
+            </div>
+
+            <div class="decision-box">
+              <div class="decision-head">Raise repull only if:</div>
+              <div class="decision-body">
+                <ul>
+                  <li>The existing route is no longer serviceable and a local repair will not restore service.</li>
+                  <li>There is no safe, compliant partial recovery option.</li>
+                  <li>The evidence demonstrates why full replacement is proportionate.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card route-card" id="reblows">
+          <div class="route-head green">
+            <h3>FTTP / FTTO Reblows</h3>
+            <p>Check tube condition, access points, distance, seals and the exact obstruction location before concluding that a full reblow or replacement is required.</p>
+          </div>
+          <div class="route-body">
+            <div class="accordion">
+              <details open>
+                <summary>Checks before considering reblow escalation</summary>
+                <div class="details-content">
+                  <ul>
+                    <li>Confirm you are working on the correct tube and route from start point to endpoint.</li>
+                    <li>Check for localised blockages, kinks, collapsed sections, tight bends or sealing issues.</li>
+                    <li>Validate whether the problem is loss of path, contamination, damaged tube end or a route integrity issue.</li>
+                    <li>Identify the approximate point at which progress stops rather than describing it as a generic failed reblow.</li>
+                  </ul>
+                </div>
+              </details>
+
+              <details>
+                <summary>Evidence to capture</summary>
+                <div class="details-content">
+                  <ul>
+                    <li>Route start/end photos and chamber or access point photos where relevant.</li>
+                    <li>Distance achieved before failure or the section where resistance is found.</li>
+                    <li>Any visible tube damage, contamination or access issue.</li>
+                    <li>Confirmation of what preparation and recovery steps were completed first.</li>
+                  </ul>
+                </div>
+              </details>
+
+              <details>
+                <summary>Common avoidable reblow triggers</summary>
+                <div class="details-content">
+                  <ul>
+                    <li>Escalating before narrowing the obstruction to a specific section.</li>
+                    <li>Not checking whether the failure is at the tube end, coupling or chamber transition.</li>
+                    <li>Poor evidence, meaning the next team has to repeat diagnosis from scratch.</li>
+                  </ul>
+                </div>
+              </details>
+            </div>
+
+            <div class="decision-box">
+              <div class="decision-head">Raise reblow / replacement only if:</div>
+              <div class="decision-body">
+                <ul>
+                  <li>The path cannot be recovered through approved checks and recovery steps.</li>
+                  <li>The obstruction or defect indicates the route itself is compromised.</li>
+                  <li>The evidence supports a repeat attendance with the right next action.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card route-card" id="ug-xpon">
+          <div class="route-head">
+            <h3>Underground Maverick XPON Repulls</h3>
+            <p>Identify the exact underground section causing failure, confirm chamber / duct condition, and avoid unnecessary civils or repulls where recovery or reroute remains possible.</p>
+          </div>
+          <div class="route-body">
+            <div class="accordion">
+              <details open>
+                <summary>Checks before considering repull</summary>
+                <div class="details-content">
+                  <ul>
+                    <li>Confirm the correct duct route, chamber sequence and entry point to the property.</li>
+                    <li>Check whether the issue is at the Toby, chamber neck, final entry, duct transition or a single blocked section.</li>
+                    <li>Identify whether the existing route can be recovered or whether an alternative path exists before requesting a full repull.</li>
+                    <li>Separate true route failure from access limitations, poor identification or local obstruction.</li>
+                  </ul>
+                </div>
+              </details>
+
+              <details>
+                <summary>Evidence to capture</summary>
+                <div class="details-content">
+                  <ul>
+                    <li>Photos of Toby, chamber(s), entry point and any visible obstruction or defect.</li>
+                    <li>Notes on rod distance, stop point, chamber findings and route condition.</li>
+                    <li>What has been attempted to recover the route and the outcome of each step.</li>
+                    <li>Any environmental or access barriers that affect the decision.</li>
+                  </ul>
+                </div>
+              </details>
+
+              <details>
+                <summary>Common avoidable repull triggers</summary>
+                <div class="details-content">
+                  <ul>
+                    <li>Not locating the blockage section closely enough before raising the job on.</li>
+                    <li>Assuming civils are required without sufficient route evidence.</li>
+                    <li>Failing to show why alternative routing or local recovery is not possible.</li>
+                  </ul>
+                </div>
+              </details>
+            </div>
+
+            <div class="decision-box">
+              <div class="decision-head">Raise repull only if:</div>
+              <div class="decision-body">
+                <ul>
+                  <li>The underground route is proven not recoverable by normal approved methods.</li>
+                  <li>The affected section has been narrowed down enough for the next team to act efficiently.</li>
+                  <li>Your evidence supports repull instead of another avoidable diagnosis visit.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="top-grid" style="margin-top:18px;">
+        <div class="card">
+          <div class="eyebrow">What good looks like</div>
+          <h3>Strong repull rationale</h3>
+          <ul class="check-list">
+            <li>The route has been validated and the correct plant confirmed.</li>
+            <li>The issue has been narrowed to a defined section or failure point.</li>
+            <li>Relevant recovery or reuse options were attempted first.</li>
+            <li>Clear photo evidence and concise notes explain why the next action is justified.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="eyebrow">What to avoid</div>
+          <h3>Weak repull rationale</h3>
+          <ul class="warn-list">
+            <li>"Won’t go" with no distance, no blockage location and no route evidence.</li>
+            <li>"Needs repull" without saying why reuse or recovery was not possible.</li>
+            <li>Photographs that do not show the defect, route or access issue clearly.</li>
+            <li>Notes that force the next team to repeat the same diagnosis from the start.</li>
+          </ul>
+        </div>
+      </section>
+
+      <div class="footer-note">
+        This guidance sets out the national approach to avoiding unnecessary repulls and reblows. Repulls should only be raised once the correct route validation, recovery steps and evidence capture have been completed and the route is confirmed to be genuinely non-recoverable. Clear evidence and concise notes must always support the decision so that the next action can be completed efficiently.
+      </div>
+    </div>
+  </main>
+</body>
+</html>
