@@ -473,23 +473,77 @@
     },
     'ug-xpon': {
       title: 'Underground Maverick XPON',
-      steps: [
-        {
-          question: 'Have you confirmed the duct route and chambers?',
-          yes: { next: 1 },
-          no: { outcome: 'Validate the duct route and chamber sequence before progressing. Do not raise a repull at this stage.' }
-        },
-        {
-          question: 'Have you identified the blockage section?',
-          yes: { next: 2 },
-          no: { outcome: 'Rod the route and isolate the blockage section before escalating.' }
-        },
-        {
-          question: 'Can the route be recovered or rerouted?',
-          yes: { outcome: 'Recover or reroute and complete the job. Do not raise a repull.' },
-          no: { outcome: 'Capture clear evidence and raise a repull for the affected section.' }
-        }
-      ]
+      buildTypeQuestion: 'What is the build type?',
+      buildTypes: {
+        'PA2': [
+          {
+            question: 'Have you confirmed the duct route and chambers?',
+            yes: { next: 1 },
+            no: { outcome: 'Validate the duct route and chamber sequence before progressing. Do not raise a repull at this stage.' }
+          },
+          {
+            question: 'Have you identified the blockage section?',
+            yes: { next: 2 },
+            no: { outcome: 'Rod the route and isolate the blockage section before escalating.' }
+          },
+          {
+            question: 'Can the route be recovered or rerouted?',
+            yes: { outcome: 'Recover or reroute and complete the job. Do not raise a repull.' },
+            no: { outcome: 'Capture clear evidence and raise a repull for the affected section.' }
+          }
+        ],
+        'PA3': [
+          {
+            question: 'Have you confirmed the duct route and chambers?',
+            yes: { next: 1 },
+            no: { outcome: 'Validate the duct route and chamber sequence before progressing. Do not raise a repull at this stage.' }
+          },
+          {
+            question: 'Have you identified the blockage section?',
+            yes: { next: 2 },
+            no: { outcome: 'Rod the route and isolate the blockage section before escalating.' }
+          },
+          {
+            question: 'Can the route be recovered or rerouted?',
+            yes: { outcome: 'Recover or reroute and complete the job. Do not raise a repull.' },
+            no: { outcome: 'Capture clear evidence and raise a repull for the affected section.' }
+          }
+        ],
+        'CUR': [
+          {
+            question: 'Have you confirmed the duct route and chambers?',
+            yes: { next: 1 },
+            no: { outcome: 'Validate the duct route and chamber sequence before progressing. Do not raise a repull at this stage.' }
+          },
+          {
+            question: 'Have you identified the blockage section?',
+            yes: { next: 2 },
+            no: { outcome: 'Rod the route and isolate the blockage section before escalating.' }
+          },
+          {
+            question: 'Can the route be recovered or rerouted?',
+            yes: { outcome: 'Recover or reroute and complete the job. Do not raise a repull.' },
+            no: { outcome: 'Capture clear evidence and raise a repull for the affected section.' }
+          }
+        ],
+        'PA4': [
+          {
+            question: 'Have you confirmed the duct route and chambers?',
+            yes: { next: 1 },
+            no: { outcome: 'Validate the duct route and chamber sequence before progressing. Do not raise a repull at this stage.' }
+          },
+          {
+            question: 'Have you identified the blockage section?',
+            yes: { next: 2 },
+            no: { outcome: 'Rod the route and isolate the blockage section before escalating.' }
+          },
+          {
+            question: 'Can the route be recovered or rerouted?',
+            yes: { outcome: 'Recover or reroute and complete the job. Do not raise a repull.' },
+            no: { outcome: 'Capture clear evidence and raise a repull for the affected section.' }
+          }
+        ]
+      }
     }
   };
 
@@ -500,15 +554,16 @@
     }
   }
 
-  function renderStep(flowId, stepIndex, container){
+  function renderStep(flowId, stepIndex, container, buildType){
     const flow = flows[flowId];
-    const step = flow.steps[stepIndex];
+    const steps = buildType ? flow.buildTypes[buildType] : flow.steps;
+    const step = steps[stepIndex];
     if(!step) return;
 
     const card = document.createElement('div');
     card.className = 'decision-box';
     card.innerHTML = `
-      <div class="decision-head">${stepIndex + 1}. ${step.question}</div>
+      <div class="decision-head">${buildType ? stepIndex + 2 : stepIndex + 1}. ${step.question}</div>
       <div class="decision-body" style="display:flex;gap:12px;flex-wrap:wrap;">
         <button class="flow-btn no-btn">No</button>
         <button class="flow-btn yes-btn">Yes</button>
@@ -524,19 +579,20 @@
       yesBtn.disabled = true;
       const answer = step[answerKey];
 
-      const result = document.createElement('div');
-      result.style.marginTop = '12px';
-      result.style.width = '100%';
-      result.style.padding = '14px';
-      result.style.borderRadius = '14px';
-      result.style.background = '#f8fbff';
-      result.style.border = '1px solid #dbeafe';
-      result.style.color = '#1e293b';
-      result.style.lineHeight = '1.45';
-      body.appendChild(result);
-
       if(answer.next !== undefined){
-        renderStep(flowId, answer.next, container);result.innerHTML = `<strong>Outcome:</strong> ${answer.outcome}`;
+        renderStep(flowId, answer.next, container, buildType);
+      } else if(answer.outcome){
+        const result = document.createElement('div');
+        result.style.marginTop = '12px';
+        result.style.width = '100%';
+        result.style.padding = '14px';
+        result.style.borderRadius = '14px';
+        result.style.background = '#f8fbff';
+        result.style.border = '1px solid #dbeafe';
+        result.style.color = '#1e293b';
+        result.style.lineHeight = '1.45';
+        result.innerHTML = `<strong>Outcome:</strong> ${answer.outcome}`;
+        body.appendChild(result);
       }
     }
 
@@ -546,12 +602,33 @@
     container.appendChild(card);
   }
 
+  function renderBuildTypeSelector(flowId, container){
+    const flow = flows[flowId];
+    const card = document.createElement('div');
+    card.className = 'decision-box';
+    const buttons = Object.keys(flow.buildTypes).map(type => `<button class="flow-btn yes-btn buildtype-btn" data-type="${type}">${type}</button>`).join('');
+    card.innerHTML = `
+      <div class="decision-head">1. ${flow.buildTypeQuestion}</div>
+      <div class="decision-body" style="display:flex;gap:12px;flex-wrap:wrap;">${buttons}</div>
+    `;
+
+    const btns = card.querySelectorAll('.buildtype-btn');
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btns.forEach(b => b.disabled = true);
+        renderStep(flowId, 0, container, btn.dataset.type);
+      });
+    });
+
+    container.appendChild(card);
+  }
+
   function initialiseFlows(){
     const mappings = [
-      ['oh-xpon', 'Overhead Maverick XPON'],
-      ['hfc-repulls', 'HFC Repulls'],
-      ['reblows', 'FTTP / FTTO Reblows'],
-      ['ug-xpon', 'Underground Maverick XPON']
+      ['oh-xpon'],
+      ['hfc-repulls'],
+      ['reblows'],
+      ['ug-xpon']
     ];
 
     mappings.forEach(([id]) => {
@@ -560,7 +637,11 @@
       const body = route.querySelector('.route-body');
       if(!body) return;
       body.innerHTML = '';
-      renderStep(id, 0, body);
+      if(id === 'ug-xpon'){
+        renderBuildTypeSelector(id, body);
+      } else {
+        renderStep(id, 0, body);
+      }
     });
   }
 
