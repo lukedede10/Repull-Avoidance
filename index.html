@@ -266,22 +266,22 @@
       </p>
 
       <div class="quick-links">
-        <a class="quick-link" href="#oh-xpon">
-          <b>Overhead Maverick XPON Repulls</b>
-          <span>Span, route, existing plant, pull path, obstruction checks and evidence.</span>
-        </a>
-        <a class="quick-link" href="#hfc-repulls">
+        <button class="quick-link" onclick="goToFlow('oh-xpon')">
+          <b>Overhead Maverick XPON</b>
+          <span>Tap to open the overhead repull avoidance flow.</span>
+        </button>
+        <button class="quick-link" onclick="goToFlow('hfc-repulls')">
           <b>HFC Repulls</b>
-          <span>Existing coax route validation, reuse opportunity, blockages and termination checks.</span>
-        </a>
-        <a class="quick-link" href="#reblows">
+          <span>Tap to open the HFC coax repull avoidance flow.</span>
+        </button>
+        <button class="quick-link" onclick="goToFlow('reblows')">
           <b>FTTP / FTTO Reblows</b>
-          <span>Tube integrity, rod/rope recovery, lubrication, distance and access review.</span>
-        </a>
-        <a class="quick-link" href="#ug-xpon">
-          <b>Underground Maverick XPON Repulls</b>
-          <span>Duct route, blockage location, chamber access and civils avoidance controls.</span>
-        </a>
+          <span>Tap to open the fibre reblow decision flow.</span>
+        </button>
+        <button class="quick-link" onclick="goToFlow('ug-xpon')">
+          <b>Maverick Underground XPON</b>
+          <span>Tap to open the underground repull avoidance flow.</span>
+        </button>
       </div>
     </div>
   </header>
@@ -457,6 +457,7 @@
         <article class="card route-card" id="ug-xpon">
           <div class="route-head">
             <h3>Underground Maverick XPON</h3>
+            <p><strong>Applicable build types:</strong> PA2 • PA3 • CUR • PA4</p>
             <p>Use this flow before raising underground repulls.</p>
           </div>
           <div class="route-body">
@@ -525,5 +526,13 @@
       </div>
     </div>
   </main>
+  <script>
+    function goToFlow(id){
+      const el = document.getElementById(id);
+      if(el){
+        el.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    }
+  </script>
 </body>
 </html>
