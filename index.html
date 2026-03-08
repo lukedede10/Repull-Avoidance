@@ -536,10 +536,7 @@
       body.appendChild(result);
 
       if(answer.next !== undefined){
-        result.innerHTML = '<strong>Next step unlocked below.</strong>';
-        renderStep(flowId, answer.next, container);
-      } else if(answer.outcome){
-        result.innerHTML = `<strong>Outcome:</strong> ${answer.outcome}`;
+        renderStep(flowId, answer.next, container);result.innerHTML = `<strong>Outcome:</strong> ${answer.outcome}`;
       }
     }
 
