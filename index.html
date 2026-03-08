@@ -219,6 +219,19 @@
       font-size:14px;
     }
     .decision-body{padding:14px}
+    .flow-btn{
+      padding:12px 18px;
+      border-radius:12px;
+      border:none;
+      color:#fff;
+      font-weight:700;
+      cursor:pointer;
+      min-width:72px;
+      box-shadow:0 6px 14px rgba(2,6,23,.12);
+    }
+    .flow-btn:disabled{opacity:.65;cursor:default}
+    .no-btn{background:#E4002B}
+    .yes-btn{background:#005EB8}
     .decision-body ul{margin:0;padding-left:18px;color:#334155}
     .decision-body li{margin:8px 0;line-height:1.45}
 
@@ -332,71 +345,37 @@
 
       <section class="routes">
 
-<!-- Network selection leads into tap flow -->
-
 <article class="card route-card" id="oh-xpon">
   <div class="route-head mix">
     <h3>Overhead Maverick XPON</h3>
-    <p>Tap the answer to follow the repull avoidance flow.</p>
+    <p>Tap the answers below to follow the repull avoidance flow.</p>
   </div>
-  <div class="route-body">
-    <div class="decision-box">
-      <div class="decision-head">Are you working on the correct span and route?</div>
-      <div class="decision-body" style="display:flex;gap:12px;flex-wrap:wrap;">
-        <button onclick="alert('Validate plant, pole, DP and route before continuing.')" style="padding:12px 18px;border-radius:12px;border:none;background:#E4002B;color:#fff;font-weight:700;cursor:pointer;">No</button>
-        <button onclick="alert('Continue to next validation checks on site.')" style="padding:12px 18px;border-radius:12px;border:none;background:#005EB8;color:#fff;font-weight:700;cursor:pointer;">Yes</button>
-      </div>
-    </div>
-  </div>
+  <div class="route-body"></div>
 </article>
 
 <article class="card route-card" id="hfc-repulls">
   <div class="route-head red">
     <h3>HFC Repulls</h3>
-    <p>Tap the answer to continue the avoidance flow.</p>
+    <p>Tap the answers below to follow the repull avoidance flow.</p>
   </div>
-  <div class="route-body">
-    <div class="decision-box">
-      <div class="decision-head">Have you validated the full coax route?</div>
-      <div class="decision-body" style="display:flex;gap:12px;flex-wrap:wrap;">
-        <button onclick="alert('Confirm route, terminations and plant before progressing.')" style="padding:12px 18px;border-radius:12px;border:none;background:#E4002B;color:#fff;font-weight:700;cursor:pointer;">No</button>
-        <button onclick="alert('Continue with further route checks.')" style="padding:12px 18px;border-radius:12px;border:none;background:#005EB8;color:#fff;font-weight:700;cursor:pointer;">Yes</button>
-      </div>
-    </div>
-  </div>
+  <div class="route-body"></div>
 </article>
 
 <article class="card route-card" id="reblows">
   <div class="route-head green">
     <h3>FTTP / FTTO Reblows</h3>
-    <p>Tap the answer to continue the reblow checks.</p>
+    <p>Tap the answers below to follow the reblow decision flow.</p>
   </div>
-  <div class="route-body">
-    <div class="decision-box">
-      <div class="decision-head">Are you working on the correct tube and route?</div>
-      <div class="decision-body" style="display:flex;gap:12px;flex-wrap:wrap;">
-        <button onclick="alert('Confirm tube path and access points.')" style="padding:12px 18px;border-radius:12px;border:none;background:#E4002B;color:#fff;font-weight:700;cursor:pointer;">No</button>
-        <button onclick="alert('Continue with obstruction identification.')" style="padding:12px 18px;border-radius:12px;border:none;background:#005EB8;color:#fff;font-weight:700;cursor:pointer;">Yes</button>
-      </div>
-    </div>
-  </div>
+  <div class="route-body"></div>
 </article>
 
 <article class="card route-card" id="ug-xpon">
   <div class="route-head">
     <h3>Underground Maverick XPON</h3>
     <p><strong>Build Types:</strong> PA2 • PA3 • CUR • PA4</p>
-    <p>Tap the answer to continue the underground validation flow.</p>
+    <p>Tap the answers below to follow the repull avoidance flow.</p>
   </div>
-  <div class="route-body">
-    <div class="decision-box">
-      <div class="decision-head">Have you confirmed the duct route and chambers?</div>
-      <div class="decision-body" style="display:flex;gap:12px;flex-wrap:wrap;">
-        <button onclick="alert('Validate duct route and chamber sequence.')" style="padding:12px 18px;border-radius:12px;border:none;background:#E4002B;color:#fff;font-weight:700;cursor:pointer;">No</button>
-        <button onclick="alert('Continue with blockage identification.')" style="padding:12px 18px;border-radius:12px;border:none;background:#005EB8;color:#fff;font-weight:700;cursor:pointer;">Yes</button>
-      </div>
-    </div>
-  </div>
+  <div class="route-body"></div>
 </article>
 
 </section>
@@ -431,12 +410,164 @@
     </div>
   </main>
   <script>
-    function goToFlow(id){
-      const el = document.getElementById(id);
-      if(el){
-        el.scrollIntoView({behavior:'smooth', block:'start'});
+  const flows = {
+    'oh-xpon': {
+      title: 'Overhead Maverick XPON',
+      steps: [
+        {
+          question: 'Are you working on the correct span and route?',
+          yes: { next: 1 },
+          no: { outcome: 'Validate plant, pole, DP and route before continuing. Do not raise a repull at this stage.' }
+        },
+        {
+          question: 'Is the issue isolated to an entry point, fixing or attachment?',
+          yes: { outcome: 'Recover locally by refixing, rerouting a short section or remaking the entry. Do not raise a repull.' },
+          no: { next: 2 }
+        },
+        {
+          question: 'Can the existing overhead route be recovered safely?',
+          yes: { outcome: 'Recover the existing route and complete the job. Do not raise a repull.' },
+          no: { outcome: 'Capture clear evidence of the failed route and raise a repull request.' }
+        }
+      ]
+    },
+    'hfc-repulls': {
+      title: 'HFC Repulls',
+      steps: [
+        {
+          question: 'Have you validated the full coax route?',
+          yes: { next: 1 },
+          no: { outcome: 'Confirm route, terminations and plant before progressing. Do not raise a repull at this stage.' }
+        },
+        {
+          question: 'Is the fault at a termination, fitting or short section?',
+          yes: { outcome: 'Repair locally or replace the short section. Do not raise a full repull.' },
+          no: { next: 2 }
+        },
+        {
+          question: 'Is the full route damaged or unusable?',
+          yes: { outcome: 'Capture evidence and raise a repull.' },
+          no: { outcome: 'Recover the route and complete the install. Do not raise a repull.' }
+        }
+      ]
+    },
+    'reblows': {
+      title: 'FTTP / FTTO Reblows',
+      steps: [
+        {
+          question: 'Are you working on the correct tube and route?',
+          yes: { next: 1 },
+          no: { outcome: 'Confirm the correct tube path and access points before progressing.' }
+        },
+        {
+          question: 'Have you identified where the obstruction occurs?',
+          yes: { next: 2 },
+          no: { outcome: 'Use rod distance, chambers and access checks to narrow down the obstruction location before escalating.' }
+        },
+        {
+          question: 'Is the tube recoverable?',
+          yes: { outcome: 'Recover the path and continue the reblow. Do not escalate.' },
+          no: { outcome: 'Capture clear evidence and escalate for reblow follow-on or civils.' }
+        }
+      ]
+    },
+    'ug-xpon': {
+      title: 'Underground Maverick XPON',
+      steps: [
+        {
+          question: 'Have you confirmed the duct route and chambers?',
+          yes: { next: 1 },
+          no: { outcome: 'Validate the duct route and chamber sequence before progressing. Do not raise a repull at this stage.' }
+        },
+        {
+          question: 'Have you identified the blockage section?',
+          yes: { next: 2 },
+          no: { outcome: 'Rod the route and isolate the blockage section before escalating.' }
+        },
+        {
+          question: 'Can the route be recovered or rerouted?',
+          yes: { outcome: 'Recover or reroute and complete the job. Do not raise a repull.' },
+          no: { outcome: 'Capture clear evidence and raise a repull for the affected section.' }
+        }
+      ]
+    }
+  };
+
+  function goToFlow(id){
+    const el = document.getElementById(id);
+    if(el){
+      el.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }
+
+  function renderStep(flowId, stepIndex, container){
+    const flow = flows[flowId];
+    const step = flow.steps[stepIndex];
+    if(!step) return;
+
+    const card = document.createElement('div');
+    card.className = 'decision-box';
+    card.innerHTML = `
+      <div class="decision-head">${stepIndex + 1}. ${step.question}</div>
+      <div class="decision-body" style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="flow-btn no-btn">No</button>
+        <button class="flow-btn yes-btn">Yes</button>
+      </div>
+    `;
+
+    const body = card.querySelector('.decision-body');
+    const noBtn = card.querySelector('.no-btn');
+    const yesBtn = card.querySelector('.yes-btn');
+
+    function resolveAnswer(answerKey){
+      noBtn.disabled = true;
+      yesBtn.disabled = true;
+      const answer = step[answerKey];
+
+      const result = document.createElement('div');
+      result.style.marginTop = '12px';
+      result.style.width = '100%';
+      result.style.padding = '14px';
+      result.style.borderRadius = '14px';
+      result.style.background = '#f8fbff';
+      result.style.border = '1px solid #dbeafe';
+      result.style.color = '#1e293b';
+      result.style.lineHeight = '1.45';
+      body.appendChild(result);
+
+      if(answer.next !== undefined){
+        result.innerHTML = '<strong>Next step unlocked below.</strong>';
+        renderStep(flowId, answer.next, container);
+      } else if(answer.outcome){
+        result.innerHTML = `<strong>Outcome:</strong> ${answer.outcome}`;
       }
     }
-  </script>
+
+    noBtn.addEventListener('click', () => resolveAnswer('no'));
+    yesBtn.addEventListener('click', () => resolveAnswer('yes'));
+
+    container.appendChild(card);
+  }
+
+  function initialiseFlows(){
+    const mappings = [
+      ['oh-xpon', 'Overhead Maverick XPON'],
+      ['hfc-repulls', 'HFC Repulls'],
+      ['reblows', 'FTTP / FTTO Reblows'],
+      ['ug-xpon', 'Underground Maverick XPON']
+    ];
+
+    mappings.forEach(([id]) => {
+      const route = document.getElementById(id);
+      if(!route) return;
+      const body = route.querySelector('.route-body');
+      if(!body) return;
+      body.innerHTML = '';
+      renderStep(id, 0, body);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initialiseFlows);
+</script>
 </body>
 </html>
