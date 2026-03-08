@@ -331,229 +331,169 @@
       </div>
 
       <section class="routes">
+
+        <!-- Overhead XPON -->
         <article class="card route-card" id="oh-xpon">
           <div class="route-head mix">
-            <h3>Overhead Maverick XPON Repulls</h3>
-            <p>Focus on route validation, span condition, attachment path and whether the existing overhead route can be recovered before requesting a repull.</p>
+            <h3>Overhead Maverick XPON</h3>
+            <p>Follow the decision flow below before raising a repull.</p>
           </div>
           <div class="route-body">
-            <div class="accordion">
-              <details open>
-                <summary>Checks before considering repull</summary>
-                <div class="details-content">
-                  <ul>
-                    <li>Confirm the cable is on the correct span and follows the intended route from distribution point to premises.</li>
-                    <li>Inspect visible overhead path for snag points, damaged fittings, excessive tension, abrasion or a failed section rather than assuming full-route replacement.</li>
-                    <li>Check entry point condition and whether the issue is actually at the final drop, clip path or customer entry rather than across the entire span.</li>
-                    <li>Validate whether there is an opportunity to recover, resecure or re-route on the existing overhead path within safe working limits.</li>
-                  </ul>
-                </div>
-              </details>
-
-              <details>
-                <summary>Evidence to capture</summary>
-                <div class="details-content">
-                  <ul>
-                    <li>Clear photos of both ends of the overhead path and any visible defect or obstruction.</li>
-                    <li>Photos showing pole / bracket / building attachment points and entry route.</li>
-                    <li>Notes covering what recovery actions were attempted and why they were unsuccessful.</li>
-                    <li>A precise description of whether the failure is at one section, one attachment point or the full route.</li>
-                  </ul>
-                </div>
-              </details>
-
-              <details>
-                <summary>Common avoidable repull triggers</summary>
-                <div class="details-content">
-                  <ul>
-                    <li>Assuming the whole span has failed when the issue is actually at the entry point or final fixing.</li>
-                    <li>Not checking whether the visible obstruction can be safely cleared or bypassed.</li>
-                    <li>Insufficient evidence, resulting in another visit just to confirm the original diagnosis.</li>
-                  </ul>
-                </div>
-              </details>
+            <div class="decision-box">
+              <div class="decision-head">1. Are you working on the correct span and route?</div>
+              <div class="decision-body">
+                <ul>
+                  <li><b>No:</b> Validate plant, pole, DP and route before continuing.</li>
+                  <li><b>Yes:</b> Continue to Step 2.</li>
+                </ul>
+              </div>
             </div>
 
             <div class="decision-box">
-              <div class="decision-head">Raise repull only if:</div>
+              <div class="decision-head">2. Is the issue isolated to an entry point, fixing or attachment?</div>
               <div class="decision-body">
                 <ul>
-                  <li>The existing overhead route cannot be safely reused or recovered.</li>
-                  <li>The failed section cannot be isolated to a smaller corrective action.</li>
-                  <li>Your evidence clearly shows why a fresh pull is needed.</li>
+                  <li><b>Yes:</b> Recover locally (refix, reroute short section, remake entry).</li>
+                  <li><b>No:</b> Continue to Step 3.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="decision-box">
+              <div class="decision-head">3. Can the existing overhead route be recovered safely?</div>
+              <div class="decision-body">
+                <ul>
+                  <li><b>Yes:</b> Recover and complete the job.</li>
+                  <li><b>No:</b> Capture full route evidence and proceed to repull request.</li>
                 </ul>
               </div>
             </div>
           </div>
         </article>
 
+        <!-- HFC -->
         <article class="card route-card" id="hfc-repulls">
           <div class="route-head red">
             <h3>HFC Repulls</h3>
-            <p>Prioritise reuse of the existing route, identify whether the issue is coax, fitting, access or local blockage, and avoid full repulls where the defect is isolated.</p>
+            <p>Use the checks below before requesting a full coax repull.</p>
           </div>
           <div class="route-body">
-            <div class="accordion">
-              <details open>
-                <summary>Checks before considering repull</summary>
-                <div class="details-content">
-                  <ul>
-                    <li>Confirm the existing coax route, termination points and whether the original route remains viable.</li>
-                    <li>Check for localised damage, crushed sections, poor bends, failed fittings or access limitations.</li>
-                    <li>Validate whether the issue is at a single point such as an entry, wall transition, cabinet side or internal termination.</li>
-                    <li>Consider whether partial replacement, rerouting a short section or remaking terminations would resolve the issue.</li>
-                  </ul>
-                </div>
-              </details>
-
-              <details>
-                <summary>Evidence to capture</summary>
-                <div class="details-content">
-                  <ul>
-                    <li>Photos of the full visible route and both ends.</li>
-                    <li>Close-up images of damaged or failed sections.</li>
-                    <li>Notes on continuity / condition findings and what was ruled out.</li>
-                    <li>Any access or route constraints preventing reuse.</li>
-                  </ul>
-                </div>
-              </details>
-
-              <details>
-                <summary>Common avoidable repull triggers</summary>
-                <div class="details-content">
-                  <ul>
-                    <li>Jumping to full replacement before checking fittings and terminations.</li>
-                    <li>Treating an access issue as a cable issue.</li>
-                    <li>Not separating internal route problems from external plant problems.</li>
-                  </ul>
-                </div>
-              </details>
-            </div>
 
             <div class="decision-box">
-              <div class="decision-head">Raise repull only if:</div>
+              <div class="decision-head">1. Have you validated the full coax route?</div>
               <div class="decision-body">
                 <ul>
-                  <li>The existing route is no longer serviceable and a local repair will not restore service.</li>
-                  <li>There is no safe, compliant partial recovery option.</li>
-                  <li>The evidence demonstrates why full replacement is proportionate.</li>
+                  <li><b>No:</b> Confirm route, terminations and plant.</li>
+                  <li><b>Yes:</b> Continue to Step 2.</li>
                 </ul>
               </div>
             </div>
+
+            <div class="decision-box">
+              <div class="decision-head">2. Is the fault at a termination, fitting or short section?</div>
+              <div class="decision-body">
+                <ul>
+                  <li><b>Yes:</b> Repair locally or replace short section.</li>
+                  <li><b>No:</b> Continue to Step 3.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="decision-box">
+              <div class="decision-head">3. Is the full route damaged or unusable?</div>
+              <div class="decision-body">
+                <ul>
+                  <li><b>No:</b> Recover route and complete install.</li>
+                  <li><b>Yes:</b> Capture evidence and raise repull.</li>
+                </ul>
+              </div>
+            </div>
+
           </div>
         </article>
 
+        <!-- FTTP Reblow -->
         <article class="card route-card" id="reblows">
           <div class="route-head green">
             <h3>FTTP / FTTO Reblows</h3>
-            <p>Check tube condition, access points, distance, seals and the exact obstruction location before concluding that a full reblow or replacement is required.</p>
+            <p>Use the reblow decision flow before escalating.</p>
           </div>
           <div class="route-body">
-            <div class="accordion">
-              <details open>
-                <summary>Checks before considering reblow escalation</summary>
-                <div class="details-content">
-                  <ul>
-                    <li>Confirm you are working on the correct tube and route from start point to endpoint.</li>
-                    <li>Check for localised blockages, kinks, collapsed sections, tight bends or sealing issues.</li>
-                    <li>Validate whether the problem is loss of path, contamination, damaged tube end or a route integrity issue.</li>
-                    <li>Identify the approximate point at which progress stops rather than describing it as a generic failed reblow.</li>
-                  </ul>
-                </div>
-              </details>
-
-              <details>
-                <summary>Evidence to capture</summary>
-                <div class="details-content">
-                  <ul>
-                    <li>Route start/end photos and chamber or access point photos where relevant.</li>
-                    <li>Distance achieved before failure or the section where resistance is found.</li>
-                    <li>Any visible tube damage, contamination or access issue.</li>
-                    <li>Confirmation of what preparation and recovery steps were completed first.</li>
-                  </ul>
-                </div>
-              </details>
-
-              <details>
-                <summary>Common avoidable reblow triggers</summary>
-                <div class="details-content">
-                  <ul>
-                    <li>Escalating before narrowing the obstruction to a specific section.</li>
-                    <li>Not checking whether the failure is at the tube end, coupling or chamber transition.</li>
-                    <li>Poor evidence, meaning the next team has to repeat diagnosis from scratch.</li>
-                  </ul>
-                </div>
-              </details>
-            </div>
 
             <div class="decision-box">
-              <div class="decision-head">Raise reblow / replacement only if:</div>
+              <div class="decision-head">1. Are you working on the correct tube and route?</div>
               <div class="decision-body">
                 <ul>
-                  <li>The path cannot be recovered through approved checks and recovery steps.</li>
-                  <li>The obstruction or defect indicates the route itself is compromised.</li>
-                  <li>The evidence supports a repeat attendance with the right next action.</li>
+                  <li><b>No:</b> Confirm tube path and access points.</li>
+                  <li><b>Yes:</b> Continue to Step 2.</li>
                 </ul>
               </div>
             </div>
+
+            <div class="decision-box">
+              <div class="decision-head">2. Have you identified where the obstruction occurs?</div>
+              <div class="decision-body">
+                <ul>
+                  <li><b>No:</b> Use rod distance or chamber checks to narrow location.</li>
+                  <li><b>Yes:</b> Continue to Step 3.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="decision-box">
+              <div class="decision-head">3. Is the tube recoverable?</div>
+              <div class="decision-body">
+                <ul>
+                  <li><b>Yes:</b> Recover path and continue blow.</li>
+                  <li><b>No:</b> Capture evidence and escalate for reblow or civils.</li>
+                </ul>
+              </div>
+            </div>
+
           </div>
         </article>
 
+        <!-- Underground XPON -->
         <article class="card route-card" id="ug-xpon">
           <div class="route-head">
-            <h3>Underground Maverick XPON Repulls</h3>
-            <p>Identify the exact underground section causing failure, confirm chamber / duct condition, and avoid unnecessary civils or repulls where recovery or reroute remains possible.</p>
+            <h3>Underground Maverick XPON</h3>
+            <p>Use this flow before raising underground repulls.</p>
           </div>
           <div class="route-body">
-            <div class="accordion">
-              <details open>
-                <summary>Checks before considering repull</summary>
-                <div class="details-content">
-                  <ul>
-                    <li>Confirm the correct duct route, chamber sequence and entry point to the property.</li>
-                    <li>Check whether the issue is at the Toby, chamber neck, final entry, duct transition or a single blocked section.</li>
-                    <li>Identify whether the existing route can be recovered or whether an alternative path exists before requesting a full repull.</li>
-                    <li>Separate true route failure from access limitations, poor identification or local obstruction.</li>
-                  </ul>
-                </div>
-              </details>
-
-              <details>
-                <summary>Evidence to capture</summary>
-                <div class="details-content">
-                  <ul>
-                    <li>Photos of Toby, chamber(s), entry point and any visible obstruction or defect.</li>
-                    <li>Notes on rod distance, stop point, chamber findings and route condition.</li>
-                    <li>What has been attempted to recover the route and the outcome of each step.</li>
-                    <li>Any environmental or access barriers that affect the decision.</li>
-                  </ul>
-                </div>
-              </details>
-
-              <details>
-                <summary>Common avoidable repull triggers</summary>
-                <div class="details-content">
-                  <ul>
-                    <li>Not locating the blockage section closely enough before raising the job on.</li>
-                    <li>Assuming civils are required without sufficient route evidence.</li>
-                    <li>Failing to show why alternative routing or local recovery is not possible.</li>
-                  </ul>
-                </div>
-              </details>
-            </div>
 
             <div class="decision-box">
-              <div class="decision-head">Raise repull only if:</div>
+              <div class="decision-head">1. Have you confirmed the duct route and chambers?</div>
               <div class="decision-body">
                 <ul>
-                  <li>The underground route is proven not recoverable by normal approved methods.</li>
-                  <li>The affected section has been narrowed down enough for the next team to act efficiently.</li>
-                  <li>Your evidence supports repull instead of another avoidable diagnosis visit.</li>
+                  <li><b>No:</b> Validate route and chamber sequence.</li>
+                  <li><b>Yes:</b> Continue to Step 2.</li>
                 </ul>
               </div>
             </div>
+
+            <div class="decision-box">
+              <div class="decision-head">2. Have you identified the blockage section?</div>
+              <div class="decision-body">
+                <ul>
+                  <li><b>No:</b> Rod and isolate the section.</li>
+                  <li><b>Yes:</b> Continue to Step 3.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="decision-box">
+              <div class="decision-head">3. Can the route be recovered or rerouted?</div>
+              <div class="decision-body">
+                <ul>
+                  <li><b>Yes:</b> Recover route and complete.</li>
+                  <li><b>No:</b> Capture evidence and raise repull.</li>
+                </ul>
+              </div>
+            </div>
+
           </div>
         </article>
+
       </section>
 
       <section class="top-grid" style="margin-top:18px;">
@@ -581,7 +521,7 @@
       </section>
 
       <div class="footer-note">
-        This guidance sets out the national approach to avoiding unnecessary repulls and reblows. Repulls should only be raised once the correct route validation, recovery steps and evidence capture have been completed and the route is confirmed to be genuinely non-recoverable. Clear evidence and concise notes must always support the decision so that the next action can be completed efficiently.
+        This guidance sets out the national approach to avoiding unnecessary repulls and reblows. Repulls should only be raised once the correct route validation, recovery steps and evidence capture have been completed and the route is confirmed to be genuinely non‑recoverable. Clear evidence and concise notes must always support the decision so that the next action can be completed efficiently.
       </div>
     </div>
   </main>
