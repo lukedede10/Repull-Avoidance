@@ -446,24 +446,19 @@
       title: 'HFC Repulls',
       steps: [
         {
-          question: "Have you replaced all connections (F's in omni and cabinet)?",
+          question: 'Have you validated the full coax route?',
           yes: { next: 1 },
-          no: { outcome: 'Replace connections before progressing. Do not raise a repull at this stage.' }
+          no: { outcome: 'Confirm route, terminations and plant before progressing. Do not raise a repull at this stage.' }
         },
         {
-          question: 'Have you tested the signal level at the tap port?',
-          yes: { next: 2 },
-          no: { outcome: 'Test signal at the tap port. If faulty, check other ports for a working signal. If none are available, contact Networks.'}
+          question: 'Is the fault at a termination, fitting or short section?',
+          yes: { outcome: 'Repair locally or replace the short section. Do not raise a full repull.' },
+          no: { next: 2 }
         },
         {
-          question: 'Have you cut and tested the cable at the boundary or first access point after it exits underground?',
-          yes: { next: 3 },
-          no: { outcome: 'Cut and test the cable at the first access point after it exits the UG network.' }
-        },
-        {
-          question: 'Did these steps result in a successful cable test?',
-          yes: { outcome: 'Repair the cable using a splice kit, run a cable from the cut point to the omni, and continue with the job.'},
-          no: { outcome: 'If all options are exhausted, book a repull. For installs, attempt a temporary connection from a neighbour.' }
+          question: 'Is the full route damaged or unusable?',
+          yes: { outcome: 'Capture evidence and raise a repull.' },
+          no: { outcome: 'Recover the route and complete the install. Do not raise a repull.' }
         }
       ]
     },
@@ -636,8 +631,16 @@
         result.style.border = '1px solid #dbeafe';
         result.style.color = '#1e293b';
         result.style.lineHeight = '1.45';
-        result.innerHTML = `<strong>Outcome:</strong> ${answer.outcome}`;
+        result.innerHTML = `<strong>Outcome:</strong> ${answer.outcome}<div style="margin-top:12px"><button class="flow-btn back-btn outcome-back">Back</button></div>`;
         body.appendChild(result);
+
+        const outcomeBack = result.querySelector('.outcome-back');
+        outcomeBack.addEventListener('click', () => {
+          result.remove();
+          noBtn.disabled = false;
+          yesBtn.disabled = false;
+          if(backBtn) backBtn.disabled = false;
+        });
       }
     }
 
