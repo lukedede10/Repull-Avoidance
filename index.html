@@ -1,704 +1,352 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Repull Avoidance Guide (VMO2)</title>
-  <style>
-    :root{
-      --bg:#07121f;
-      --panel:#0d1b2d;
-      --card:#ffffff;
-      --text:#0b1220;
-      --muted:#64748b;
-      --stroke:#d6dde8;
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Repull Avoidance Guide</title>
 
-      --o2:#005EB8;
-      --o2Dark:#004A93;
-      --red:#E4002B;
-      --redDark:#B80022;
-      --green:#0f9f6e;
-      --amber:#f59e0b;
+<style>
 
-      --radius:24px;
-      --shadow:0 16px 40px rgba(0,0,0,.28);
-      --shadow-soft:0 10px 24px rgba(2,6,23,.10);
-      --max:1400px;
-    }
+:root{
+--o2:#005EB8;
+--red:#E4002B;
+--bg:#07121f;
+--card:#ffffff;
+--text:#0b1220;
+--stroke:#d6dde8;
+}
 
-    *{box-sizing:border-box}
-    html,body{margin:0;height:100%;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#06101b 0%,#0b1930 100%);color:#fff}
-    body{display:flex;flex-direction:column}
+body{
+margin:0;
+font-family:Arial,Helvetica,sans-serif;
+background:linear-gradient(180deg,#06101b 0%,#0b1930 100%);
+color:#fff;
+}
 
-    .shell{width:min(var(--max),calc(100% - 24px));margin:0 auto}
+.shell{
+width:min(1400px,calc(100% - 24px));
+margin:auto;
+}
 
-    .hero{
-      position:relative;
-      overflow:hidden;
-      padding:20px 0 18px;
-    }
-    .hero::before,
-    .hero::after{
-      content:"";
-      position:absolute;
-      border-radius:999px;
-      filter:blur(10px);
-      opacity:.28;
-      pointer-events:none;
-    }
-    .hero::before{width:240px;height:240px;right:-60px;top:-40px;background:var(--o2)}
-    .hero::after{width:220px;height:220px;left:-80px;bottom:-80px;background:var(--red)}
+.card{
+background:#fff;
+color:#0b1220;
+border-radius:24px;
+padding:20px;
+margin-bottom:18px;
+}
 
-    .hero-card{
-      position:relative;
-      z-index:1;
-      background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:30px;
-      padding:18px;
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(8px);
-    }
+h1{margin-top:0}
 
-    .brand-row{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:16px;
-      flex-wrap:wrap;
-    }
-    .logo-box{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:700;
-      letter-spacing:.2px;
-    }
-    .logo-mark{
-      width:42px;height:42px;border-radius:14px;
-      background:linear-gradient(135deg,var(--red),var(--o2));
-      display:grid;place-items:center;font-size:20px;font-weight:700;
-      box-shadow:0 8px 20px rgba(0,0,0,.2);
-    }
-    .tag{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 12px;border-radius:999px;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.14);
-      font-size:13px;color:#e2e8f0;
-    }
+.quick-links{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-top:18px;
+}
 
-    h1{margin:0 0 10px;font-size:clamp(28px,4.5vw,50px);line-height:1.02}
-    .sub{margin:0;color:#dbe7f5;font-size:clamp(15px,2vw,18px);max-width:980px;line-height:1.45}
+.quick-link{
+border:none;
+border-radius:18px;
+padding:16px;
+color:white;
+cursor:pointer;
+text-align:left;
+}
 
-    .quick-links{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:14px;
-      margin:18px 0 0;
-    }
-    .quick-link{
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:22px;
-      padding:14px;
-      color:#fff;text-decoration:none;
-      transition:.18s ease;
-      min-height:94px;
-    }
-    .quick-link:hover{transform:translateY(-2px);background:rgba(255,255,255,.12)}
-    .quick-link b{display:block;font-size:15px;margin-bottom:6px}
-    .quick-link span{display:block;font-size:13px;color:#d9e5f4;line-height:1.35}
+.quick-link b{display:block;font-size:16px}
 
-    main{padding:12px 0 36px}
+.quick-link span{
+font-size:13px;
+opacity:.85
+}
 
-    .top-grid{
-      display:grid;
-      grid-template-columns:1.1fr .9fr;
-      gap:18px;
-      margin-bottom:18px;
-    }
+.quick-link:nth-child(1){background:#005EB8}
+.quick-link:nth-child(2){background:#E4002B}
+.quick-link:nth-child(3){background:#0f9f6e}
+.quick-link:nth-child(4){background:#004A93}
 
-    .card{
-      background:var(--card);
-      color:var(--text);
-      border-radius:28px;
-      box-shadow:var(--shadow-soft);
-      padding:18px;
-      border:1px solid #e8eef7;
-    }
+.routes{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:18px;
+}
 
-    .card h2,.card h3{margin:0 0 12px}
-    .eyebrow{
-      display:inline-flex;align-items:center;gap:8px;
-      font-size:12px;font-weight:700;letter-spacing:.7px;
-      color:var(--o2);text-transform:uppercase;
-      margin-bottom:10px;
-    }
+.route-head{
+padding:16px;
+color:#fff;
+font-weight:700;
+border-radius:24px 24px 0 0;
+}
 
-    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    .mini{
-      border:1px solid var(--stroke);
-      border-radius:20px;
-      padding:14px;
-      background:#f8fbff;
-    }
-    .mini h4{margin:0 0 8px;font-size:15px}
-    .mini p{margin:0;color:#475569;font-size:14px;line-height:1.45}
+.mix{background:linear-gradient(135deg,#005EB8,#E4002B)}
+.red{background:#E4002B}
+.green{background:#0f9f6e}
+.blue{background:#005EB8}
 
-    .pill-list,.check-list,.warn-list{display:grid;gap:10px;margin:0;padding:0;list-style:none}
-    .pill-list li,.check-list li,.warn-list li{
-      border-radius:16px;padding:12px 14px;font-size:14px;line-height:1.45;
-    }
-    .pill-list li{background:#eff6ff;border:1px solid #bfdbfe}
-    .check-list li{background:#f0fdf4;border:1px solid #bbf7d0}
-    .warn-list li{background:#fff7ed;border:1px solid #fed7aa}
+.route-body{
+background:#fff;
+color:#0b1220;
+padding:18px;
+border-radius:0 0 24px 24px;
+}
 
-    .section-title{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-      margin:20px 0 14px;
-      color:#fff;
-    }
-    .section-title h2{margin:0;font-size:clamp(22px,3vw,32px)}
-    .section-title p{margin:0;color:#d7e3f3;font-size:14px}
+.decision-box{
+margin-top:14px;
+border:1px solid #dbeafe;
+border-radius:16px;
+overflow:hidden;
+}
 
-    .routes{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
-    .route-card{padding:0;overflow:hidden}
-    .route-head{
-      padding:18px 18px 14px;
-      color:#fff;
-      background:linear-gradient(135deg,var(--o2) 0%, var(--o2Dark) 100%);
-    }
-    .route-head.red{background:linear-gradient(135deg,var(--red) 0%, var(--redDark) 100%)}
-    .route-head.mix{background:linear-gradient(135deg,var(--o2) 0%, var(--red) 100%)}
-    .route-head.green{background:linear-gradient(135deg,#0a8d63 0%, #0b6b58 100%)}
-    .route-head h3{margin:0 0 8px;font-size:22px}
-    .route-head p{margin:0;color:#eef6ff;font-size:14px;line-height:1.45}
+.decision-head{
+background:#eaf3ff;
+padding:12px;
+font-weight:700;
+}
 
-    .route-body{padding:18px}
-    .accordion{display:grid;gap:10px}
-    details{
-      border:1px solid var(--stroke);
-      border-radius:18px;
-      overflow:hidden;
-      background:#fff;
-    }
-    summary{
-      list-style:none;
-      cursor:pointer;
-      padding:14px 16px;
-      font-weight:700;
-      position:relative;
-      font-size:15px;
-      background:#f8fafc;
-    }
-    summary::-webkit-details-marker{display:none}
-    summary::after{
-      content:'+';
-      position:absolute;right:16px;top:50%;transform:translateY(-50%);
-      font-size:22px;color:var(--o2);
-    }
-    details[open] summary::after{content:'–'}
-    .details-content{padding:0 16px 16px}
-    .details-content ul{margin:0;padding-left:18px;color:#334155}
-    .details-content li{margin:8px 0;line-height:1.45}
+.decision-body{
+padding:14px;
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
 
-    .decision-box{
-      margin-top:14px;
-      border:1px solid #dbeafe;
-      border-radius:20px;
-      overflow:hidden;
-      background:#f8fbff;
-    }
-    .decision-head{
-      background:#eaf3ff;
-      color:#0f3f7e;
-      padding:12px 14px;
-      font-weight:700;
-      font-size:14px;
-    }
-    .decision-body{padding:14px}
-    .flow-btn{
-      padding:12px 18px;
-      border-radius:12px;
-      border:none;
-      color:#fff;
-      font-weight:700;
-      cursor:pointer;
-      min-width:72px;
-      box-shadow:0 6px 14px rgba(2,6,23,.12);
-    }
-    .back-btn{background:#64748b}
-    .flow-btn{
-      padding:12px 18px;
-      border-radius:12px;
-      border:none;
-      color:#fff;
-      font-weight:700;
-      cursor:pointer;
-      min-width:72px;
-      box-shadow:0 6px 14px rgba(2,6,23,.12);
-    }
-    .flow-btn:disabled{opacity:.65;cursor:default}
-    .no-btn{background:#E4002B}
-    .yes-btn{background:#005EB8}
-    .decision-body ul{margin:0;padding-left:18px;color:#334155}
-    .decision-body li{margin:8px 0;line-height:1.45}
+.flow-btn{
+padding:10px 16px;
+border-radius:10px;
+border:none;
+color:white;
+font-weight:700;
+cursor:pointer;
+}
 
-    .footer-note{
-      margin-top:18px;
-      padding:16px 18px;
-      border-radius:20px;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.12);
-      color:#e5eef9;
-      font-size:14px;
-      line-height:1.5;
-    }
+.yes-btn{background:#005EB8}
+.no-btn{background:#E4002B}
+.back-btn{background:#64748b}
 
-    @media (max-width: 1050px){
-      .quick-links,.routes,.top-grid{grid-template-columns:1fr}
-    }
-    @media (max-width: 720px){
-      .shell{width:min(var(--max),calc(100% - 16px))}
-      .hero-card,.card{border-radius:22px}
-      .grid-2{grid-template-columns:1fr}
-      h1{font-size:32px}
-      .route-head h3{font-size:20px}
-      .quick-link{min-height:auto}
-    }
-  </style>
+.flow-outcome{
+margin-top:12px;
+padding:14px;
+border-radius:12px;
+background:#f8fbff;
+border:1px solid #dbeafe;
+}
+
+@media(max-width:900px){
+.quick-links{grid-template-columns:1fr}
+.routes{grid-template-columns:1fr}
+}
+
+</style>
 </head>
+
 <body>
-  <header class="hero">
-    <div class="shell hero-card">
-      <div class="brand-row">
-        <div class="logo-box">
-          <div class="logo-mark">R</div>
-          <div>
-            <div style="font-size:16px;">Repull Avoidance Guide</div>
-            <div style="font-size:12px;color:#d7e3f3;">Field Operations Guidance</div>
-          </div>
-        </div>
-        <div class="tag">Field Operations • Repull Prevention</div>
-      </div>
 
-      <h1>Repull Avoidance</h1>
-      <p class="sub">
-        A mobile-first guidance site focused on avoiding unnecessary repulls and reblows by making the right checks, using the correct recovery actions first, capturing the right evidence, and escalating with a clear rationale only when required.
-      </p>
+<main>
+<div class="shell">
 
-      <div class="quick-links">
-        <button class="quick-link" onclick="goToFlow('oh-xpon')">
-          <b>Overhead Maverick XPON</b>
-          <span>Tap to open the overhead repull avoidance flow.</span>
-        </button>
-        <button class="quick-link" onclick="goToFlow('hfc-repulls')">
-          <b>HFC Repulls</b>
-          <span>Tap to open the HFC coax repull avoidance flow.</span>
-        </button>
-        <button class="quick-link" onclick="goToFlow('reblows')">
-          <b>FTTP / FTTO Reblows</b>
-          <span>Tap to open the fibre reblow decision flow.</span>
-        </button>
-        <button class="quick-link" onclick="goToFlow('ug-xpon')">
-          <b>Maverick Underground XPON</b>
-          <span>Tap to open the underground repull avoidance flow.</span>
-        </button>
-      </div>
-    </div>
-  </header>
+<section class="card">
 
-  <main>
-    <div class="shell">
-      <section class="top-grid">
-        <div class="card">
-          <div class="eyebrow">Core Principle</div>
-          <h2>Repull only when recovery options are exhausted</h2>
-          <div class="grid-2">
-            <div class="mini">
-              <h4>1. Validate the route</h4>
-              <p>Confirm the cable path, plant type, entry and exit points, and whether the existing route can still be reused or recovered.</p>
-            </div>
-            <div class="mini">
-              <h4>2. Attempt safe recovery first</h4>
-              <p>Use approved recovery steps before deciding the existing path has failed. Avoid jumping straight to repull or civils requests.</p>
-            </div>
-            <div class="mini">
-              <h4>3. Capture evidence properly</h4>
-              <p>Photographs, blockage location, route condition, access limitations, and what has already been attempted should be recorded clearly.</p>
-            </div>
-            <div class="mini">
-              <h4>4. Escalate with a reason</h4>
-              <p>If a repull is genuinely required, the justification should show why reuse, recovery, reblow or reroute is not viable.</p>
-            </div>
-          </div>
-        </div>
+<h1>Repull Avoidance</h1>
 
-        <div class="card">
-          <div class="eyebrow">Before Raising a Repull</div>
-          <h3>Mandatory checks</h3>
-          <ul class="pill-list">
-            <li>Have you confirmed the correct route and that you are working on the right plant / tube / cable?</li>
-            <li>Have you checked whether the issue is localised at the entry point, bend, fitting, Toby, chamber or termination rather than the full route?</li>
-            <li>Have you attempted the approved recovery or re-use steps relevant to that network type?</li>
-            <li>Have you identified the exact point of failure, or at least narrowed it down to a specific section?</li>
-            <li>Have you captured enough evidence for someone else to understand why a repull is needed without revisiting site blindly?</li>
-          </ul>
-        </div>
-      </section>
+<p>
+A mobile-first guidance site focused on avoiding unnecessary repulls and reblows by making the right checks,
+using the correct recovery actions first, capturing the right evidence,
+and escalating with a clear rationale only when required.
+</p>
 
-      <div class="section-title">
-        <h2>Network-specific guidance</h2>
-        <p>Use the relevant section below based on the work type.</p>
-      </div>
+<div class="quick-links">
 
-      <section class="routes">
+<button class="quick-link" onclick="goToFlow('oh-xpon')">
+<b>Overhead Maverick XPON</b>
+<span>Tap to open the overhead repull avoidance flow.</span>
+</button>
 
-<article class="card route-card" id="oh-xpon">
-  <div class="route-head mix">
-    <h3>Overhead Maverick XPON</h3>
-    <p>Tap the answers below to follow the repull avoidance flow.</p>
-  </div>
-  <div class="route-body"></div>
+<button class="quick-link" onclick="goToFlow('hfc-repulls')">
+<b>HFC Repulls</b>
+<span>Tap to open the HFC coax repull avoidance flow.</span>
+</button>
+
+<button class="quick-link" onclick="goToFlow('reblows')">
+<b>FTTP / FTTO Reblows</b>
+<span>Tap to open the fibre reblow decision flow.</span>
+</button>
+
+<button class="quick-link" onclick="goToFlow('ug-xpon')">
+<b>Maverick Underground XPON</b>
+<span>Tap to open the underground repull avoidance flow.</span>
+</button>
+
+</div>
+</section>
+
+
+<section class="routes">
+
+<article id="oh-xpon">
+<div class="route-head mix">Overhead Maverick XPON</div>
+<div class="route-body"></div>
 </article>
 
-<article class="card route-card" id="hfc-repulls">
-  <div class="route-head red">
-    <h3>HFC Repulls</h3>
-    <p>Tap the answers below to follow the repull avoidance flow.</p>
-  </div>
-  <div class="route-body"></div>
+<article id="hfc-repulls">
+<div class="route-head red">HFC Repulls</div>
+<div class="route-body"></div>
 </article>
 
-<article class="card route-card" id="reblows">
-  <div class="route-head green">
-    <h3>FTTP / FTTO Reblows</h3>
-    <p>Tap the answers below to follow the reblow decision flow.</p>
-  </div>
-  <div class="route-body"></div>
+<article id="reblows">
+<div class="route-head green">FTTP / FTTO Reblows</div>
+<div class="route-body"></div>
 </article>
 
-<article class="card route-card" id="ug-xpon">
-  <div class="route-head">
-    <h3>Underground Maverick XPON</h3>
-    <p><strong>Build Types:</strong> PA2 • PA3 • CUR • PA4</p>
-    <p>Tap the answers below to follow the repull avoidance flow.</p>
-  </div>
-  <div class="route-body"></div>
+<article id="ug-xpon">
+<div class="route-head blue">Underground Maverick XPON</div>
+<div class="route-body"></div>
 </article>
 
 </section>
 
-      <section class="top-grid" style="margin-top:18px;">
-        <div class="card">
-          <div class="eyebrow">What good looks like</div>
-          <h3>Strong repull rationale</h3>
-          <ul class="check-list">
-            <li>The route has been validated and the correct plant confirmed.</li>
-            <li>The issue has been narrowed to a defined section or failure point.</li>
-            <li>Relevant recovery or reuse options were attempted first.</li>
-            <li>Clear photo evidence and concise notes explain why the next action is justified.</li>
-          </ul>
-        </div>
+</div>
+</main>
 
-        <div class="card">
-          <div class="eyebrow">What to avoid</div>
-          <h3>Weak repull rationale</h3>
-          <ul class="warn-list">
-            <li>"Won’t go" with no distance, no blockage location and no route evidence.</li>
-            <li>"Needs repull" without saying why reuse or recovery was not possible.</li>
-            <li>Photographs that do not show the defect, route or access issue clearly.</li>
-            <li>Notes that force the next team to repeat the same diagnosis from the start.</li>
-          </ul>
-        </div>
-      </section>
 
-      <div class="footer-note">
-        This guidance sets out the national approach to avoiding unnecessary repulls and reblows. Repulls should only be raised once the correct route validation, recovery steps and evidence capture have been completed and the route is confirmed to be genuinely non‑recoverable. Clear evidence and concise notes must always support the decision so that the next action can be completed efficiently.
-      </div>
-    </div>
-  </main>
-  <script>
-  const flows = {
-    'oh-xpon': {
-      title: 'Overhead Maverick XPON',
-      steps: [
-        {
-          question: 'Are you working on the correct span and route?',
-          yes: { next: 1 },
-          no: { outcome: 'Validate plant, pole, DP and route before continuing. Do not raise a repull at this stage.' }
-        },
-        {
-          question: 'Is the issue isolated to an entry point, fixing or attachment?',
-          yes: { outcome: 'Recover locally by refixing, rerouting a short section or remaking the entry. Do not raise a repull.' },
-          no: { next: 2 }
-        },
-        {
-          question: 'Can the existing overhead route be recovered safely?',
-          yes: { outcome: 'Recover the existing route and complete the job. Do not raise a repull.' },
-          no: { outcome: 'Capture clear evidence of the failed route and raise a repull request.' }
-        }
-      ]
-    },
-    'hfc-repulls': {
-      title: 'HFC Repulls',
-      steps: [
-        {
-          question: "Have you replaced all connections (F's in omni and cabinet)?",
-          yes: { next: 1 },
-          no: { outcome: 'Replace connections before progressing. Do not raise a repull at this stage.' }
-        },
-        {
-          question: 'Have you tested the signal level at the tap port?',
-          yes: { next: 2 },
-          no: { outcome: 'Test signal at the tap port. If faulty, check other ports for a working signal. If none are available, contact Networks.' }
-        },
-        {
-          question: 'Have you cut and tested the cable at the boundary or first access point after it exits underground?',
-          yes: { next: 3 },
-          no: { outcome: 'Cut and test the cable at the first access point after it exits the UG network.' }
-        },
-        {
-          question: 'Did these steps result in a successful cable test?',
-          yes: { outcome: 'Repair the cable using a splice kit, run a cable from the cut point to the omni, and continue with the job.' },
-          no: { outcome: 'If all options are exhausted, book a repull. For installs, attempt a temporary connection from a neighbour.' }
-        }
-      ]
-    },
-    'reblows': {
-      title: 'FTTP / FTTO Reblows',
-      steps: [
-        {
-          question: 'Are you working on the correct tube and route?',
-          yes: { next: 1 },
-          no: { outcome: 'Confirm the correct tube path and access points before progressing.' }
-        },
-        {
-          question: 'Have you identified where the obstruction occurs?',
-          yes: { next: 2 },
-          no: { outcome: 'Use rod distance, chambers and access checks to narrow down the obstruction location before escalating.' }
-        },
-        {
-          question: 'Is the tube recoverable?',
-          yes: { outcome: 'Recover the path and continue the reblow. Do not escalate.' },
-          no: { outcome: 'Capture clear evidence and escalate for reblow follow-on or civils.' }
-        }
-      ]
-    },
-    'ug-xpon': {
-      title: 'Underground Maverick XPON',
-      buildTypeQuestion: 'What is the build type?',
-      buildTypes: {
-        'PA2': [
-          {
-            question: 'Have you confirmed the duct route and chambers?',
-            yes: { next: 1 },
-            no: { outcome: 'Validate the duct route and chamber sequence before progressing. Do not raise a repull at this stage.' }
-          },
-          {
-            question: 'Have you identified the blockage section?',
-            yes: { next: 2 },
-            no: { outcome: 'Rod the route and isolate the blockage section before escalating.' }
-          },
-          {
-            question: 'Can the route be recovered or rerouted?',
-            yes: { outcome: 'Recover or reroute and complete the job. Do not raise a repull.' },
-            no: { outcome: 'Capture clear evidence and raise a repull for the affected section.' }
-          }
-        ],
-        'PA3': [
-          {
-            question: 'Have you confirmed the duct route and chambers?',
-            yes: { next: 1 },
-            no: { outcome: 'Validate the duct route and chamber sequence before progressing. Do not raise a repull at this stage.' }
-          },
-          {
-            question: 'Have you identified the blockage section?',
-            yes: { next: 2 },
-            no: { outcome: 'Rod the route and isolate the blockage section before escalating.' }
-          },
-          {
-            question: 'Can the route be recovered or rerouted?',
-            yes: { outcome: 'Recover or reroute and complete the job. Do not raise a repull.' },
-            no: { outcome: 'Capture clear evidence and raise a repull for the affected section.' }
-          }
-        ],
-        'CUR': [
-          {
-            question: 'Have you confirmed the duct route and chambers?',
-            yes: { next: 1 },
-            no: { outcome: 'Validate the duct route and chamber sequence before progressing. Do not raise a repull at this stage.' }
-          },
-          {
-            question: 'Have you identified the blockage section?',
-            yes: { next: 2 },
-            no: { outcome: 'Rod the route and isolate the blockage section before escalating.' }
-          },
-          {
-            question: 'Can the route be recovered or rerouted?',
-            yes: { outcome: 'Recover or reroute and complete the job. Do not raise a repull.' },
-            no: { outcome: 'Capture clear evidence and raise a repull for the affected section.' }
-          }
-        ],
-        'PA4': [
-          {
-            question: 'Have you confirmed the duct route and chambers?',
-            yes: { next: 1 },
-            no: { outcome: 'Validate the duct route and chamber sequence before progressing. Do not raise a repull at this stage.' }
-          },
-          {
-            question: 'Have you identified the blockage section?',
-            yes: { next: 2 },
-            no: { outcome: 'Rod the route and isolate the blockage section before escalating.' }
-          },
-          {
-            question: 'Can the route be recovered or rerouted?',
-            yes: { outcome: 'Recover or reroute and complete the job. Do not raise a repull.' },
-            no: { outcome: 'Capture clear evidence and raise a repull for the affected section.' }
-          }
-        ]
-      }
-    }
-  };
+<script>
 
-  function goToFlow(id){
-    const el = document.getElementById(id);
-    if(el){
-      el.scrollIntoView({behavior:'smooth', block:'start'});
-    }
-  }
+function goToFlow(id){
+document.getElementById(id).scrollIntoView({behavior:'smooth'})
+}
 
-  function renderStep(flowId, stepIndex, container, buildType){
-    const flow = flows[flowId];
-    const steps = buildType ? flow.buildTypes[buildType] : flow.steps;
-    const step = steps[stepIndex];
-    if(!step) return;
+const flows={
 
-    const card = document.createElement('div');
-    card.className = 'decision-box';
+'hfc-repulls':{
+steps:[
 
-    const showBack = container.children.length > 0;
+{
+question:"Have you replaced all connections (F's in omni and cabinet)?",
+yes:{next:1},
+no:{outcome:"Replace connections before progressing. Do not raise a repull at this stage."}
+},
 
-    card.innerHTML = `
-      <div class="decision-head">${buildType ? stepIndex + 2 : stepIndex + 1}. ${step.question}</div>
-      <div class="decision-body" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
-        ${showBack ? '<button class="flow-btn back-btn">Back</button>' : ''}
-        <button class="flow-btn no-btn">No</button>
-        <button class="flow-btn yes-btn">Yes</button>
-      </div>
-    `;
+{
+question:"Have you tested the signal level at the tap port?",
+yes:{next:2},
+no:{outcome:"Test signal at the tap port. If faulty, check other ports for a working signal. If none are available, contact Networks."}
+},
 
-    const body = card.querySelector('.decision-body');
-    const noBtn = card.querySelector('.no-btn');
-    const yesBtn = card.querySelector('.yes-btn');
-    const backBtn = card.querySelector('.back-btn');
+{
+question:"Have you cut and tested the cable at the boundary or first access point after it exits underground?",
+yes:{next:3},
+no:{outcome:"Cut and test the cable at the first access point after it exits the UG network."}
+},
 
-    if(backBtn){
-      backBtn.addEventListener('click', () => {
-        const previousCard = card.previousElementSibling;
-        container.removeChild(card);
+{
+question:"Did these steps result in a successful cable test?",
+yes:{outcome:"Repair the cable using a splice kit, run a cable from the cut point to the omni, and continue with the job."},
+no:{outcome:"If all options are exhausted, book a repull. For installs, attempt a temporary connection from a neighbour."}
+}
 
-        if(previousCard){
-          const prevButtons = previousCard.querySelectorAll('.flow-btn');
-          prevButtons.forEach(btn => {
-            btn.disabled = false;
-            btn.removeAttribute('disabled');
-            btn.style.opacity = '1';
-            btn.style.cursor = 'pointer';
-            btn.style.pointerEvents = 'auto';
-          });
+]
+}
 
-          const oldOutcome = previousCard.querySelector('.flow-outcome');
-          if(oldOutcome) oldOutcome.remove();
-        }
-      });
-    }
+}
 
-    function resolveAnswer(answerKey){
-      noBtn.disabled = true;
-      yesBtn.disabled = true;
-      if(backBtn) backBtn.disabled = true;
 
-      const answer = step[answerKey];
+function renderStep(flowId,index,container){
 
-      if(answer.next !== undefined){
-        renderStep(flowId, answer.next, container, buildType);
-      } else if(answer.outcome){
-        const result = document.createElement('div');
-        result.className = 'flow-outcome';
-        result.style.marginTop = '12px';
-        result.style.width = '100%';
-        result.style.padding = '14px';
-        result.style.borderRadius = '14px';
-        result.style.background = '#f8fbff';
-        result.style.border = '1px solid #dbeafe';
-        result.style.color = '#1e293b';
-        result.style.lineHeight = '1.45';
-        result.innerHTML = `<strong>Outcome:</strong> ${answer.outcome}<div style="margin-top:12px"><button class="flow-btn back-btn outcome-back">Back</button></div>`;
-        body.appendChild(result);
+const flow=flows[flowId]
+const step=flow.steps[index]
 
-        const outcomeBack = result.querySelector('.outcome-back');
-        outcomeBack.addEventListener('click', () => {
-          result.remove();
-          noBtn.disabled = false;
-          yesBtn.disabled = false;
-          if(backBtn) backBtn.disabled = false;
-        });
-      }
-    }
+const card=document.createElement("div")
+card.className="decision-box"
 
-    noBtn.addEventListener('click', () => resolveAnswer('no'));
-    yesBtn.addEventListener('click', () => resolveAnswer('yes'));
+const showBack=container.children.length>0
 
-    container.appendChild(card);
-  }
+card.innerHTML=`
+<div class="decision-head">${index+1}. ${step.question}</div>
+<div class="decision-body">
+${showBack?'<button class="flow-btn back-btn">Back</button>':''}
+<button class="flow-btn no-btn">No</button>
+<button class="flow-btn yes-btn">Yes</button>
+</div>
+`
 
-  function renderBuildTypeSelector(flowId, container){
-    const flow = flows[flowId];
-    const card = document.createElement('div');
-    card.className = 'decision-box';
-    const buttons = Object.keys(flow.buildTypes).map(type => `<button class="flow-btn yes-btn buildtype-btn" data-type="${type}">${type}</button>`).join('');
-    card.innerHTML = `
-      <div class="decision-head">1. ${flow.buildTypeQuestion}</div>
-      <div class="decision-body" style="display:flex;gap:12px;flex-wrap:wrap;">${buttons}</div>
-    `;
+const body=card.querySelector(".decision-body")
+const noBtn=card.querySelector(".no-btn")
+const yesBtn=card.querySelector(".yes-btn")
+const backBtn=card.querySelector(".back-btn")
 
-    const btns = card.querySelectorAll('.buildtype-btn');
-    btns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        btns.forEach(b => b.disabled = true);
-        renderStep(flowId, 0, container, btn.dataset.type);
-      });
-    });
+if(backBtn){
 
-    container.appendChild(card);
-  }
+backBtn.onclick=()=>{
 
-  function initialiseFlows(){
-    const mappings = [
-      ['oh-xpon'],
-      ['hfc-repulls'],
-      ['reblows'],
-      ['ug-xpon']
-    ];
+const prev=card.previousElementSibling
+container.removeChild(card)
 
-    mappings.forEach(([id]) => {
-      const route = document.getElementById(id);
-      if(!route) return;
-      const body = route.querySelector('.route-body');
-      if(!body) return;
-      body.innerHTML = '';
-      if(id === 'ug-xpon'){
-        renderBuildTypeSelector(id, body);
-      } else {
-        renderStep(id, 0, body);
-      }
-    });
-  }
+if(prev){
 
-  document.addEventListener('DOMContentLoaded', initialiseFlows);
+prev.querySelectorAll(".flow-btn").forEach(btn=>{
+btn.disabled=false
+})
+
+const outcome=prev.querySelector(".flow-outcome")
+if(outcome) outcome.remove()
+
+}
+
+}
+
+}
+
+function resolve(answer){
+
+noBtn.disabled=true
+yesBtn.disabled=true
+if(backBtn)backBtn.disabled=true
+
+const result=step[answer]
+
+if(result.next!==undefined){
+
+renderStep(flowId,result.next,container)
+
+}else{
+
+const outcome=document.createElement("div")
+outcome.className="flow-outcome"
+
+outcome.innerHTML=`
+<strong>Outcome:</strong> ${result.outcome}
+<br><br>
+<button class="flow-btn back-btn outcome-back">Back</button>
+`
+
+outcome.querySelector(".outcome-back").onclick=()=>{
+outcome.remove()
+noBtn.disabled=false
+yesBtn.disabled=false
+}
+
+body.appendChild(outcome)
+
+}
+
+}
+
+noBtn.onclick=()=>resolve("no")
+yesBtn.onclick=()=>resolve("yes")
+
+container.appendChild(card)
+
+}
+
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+const route=document.querySelector("#hfc-repulls .route-body")
+renderStep("hfc-repulls",0,route)
+
+})
+
 </script>
+
 </body>
 </html>
