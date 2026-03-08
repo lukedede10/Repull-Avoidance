@@ -332,170 +332,74 @@
 
       <section class="routes">
 
-        <!-- Overhead XPON -->
-        <article class="card route-card" id="oh-xpon">
-          <div class="route-head mix">
-            <h3>Overhead Maverick XPON</h3>
-            <p>Follow the decision flow below before raising a repull.</p>
-          </div>
-          <div class="route-body">
-            <div class="decision-box">
-              <div class="decision-head">1. Are you working on the correct span and route?</div>
-              <div class="decision-body">
-                <ul>
-                  <li><b>No:</b> Validate plant, pole, DP and route before continuing.</li>
-                  <li><b>Yes:</b> Continue to Step 2.</li>
-                </ul>
-              </div>
-            </div>
+<!-- Network selection leads into tap flow -->
 
-            <div class="decision-box">
-              <div class="decision-head">2. Is the issue isolated to an entry point, fixing or attachment?</div>
-              <div class="decision-body">
-                <ul>
-                  <li><b>Yes:</b> Recover locally (refix, reroute short section, remake entry).</li>
-                  <li><b>No:</b> Continue to Step 3.</li>
-                </ul>
-              </div>
-            </div>
+<article class="card route-card" id="oh-xpon">
+  <div class="route-head mix">
+    <h3>Overhead Maverick XPON</h3>
+    <p>Tap the answer to follow the repull avoidance flow.</p>
+  </div>
+  <div class="route-body">
+    <div class="decision-box">
+      <div class="decision-head">Are you working on the correct span and route?</div>
+      <div class="decision-body" style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button onclick="alert('Validate plant, pole, DP and route before continuing.')" style="padding:12px 18px;border-radius:12px;border:none;background:#E4002B;color:#fff;font-weight:700;cursor:pointer;">No</button>
+        <button onclick="alert('Continue to next validation checks on site.')" style="padding:12px 18px;border-radius:12px;border:none;background:#005EB8;color:#fff;font-weight:700;cursor:pointer;">Yes</button>
+      </div>
+    </div>
+  </div>
+</article>
 
-            <div class="decision-box">
-              <div class="decision-head">3. Can the existing overhead route be recovered safely?</div>
-              <div class="decision-body">
-                <ul>
-                  <li><b>Yes:</b> Recover and complete the job.</li>
-                  <li><b>No:</b> Capture full route evidence and proceed to repull request.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </article>
+<article class="card route-card" id="hfc-repulls">
+  <div class="route-head red">
+    <h3>HFC Repulls</h3>
+    <p>Tap the answer to continue the avoidance flow.</p>
+  </div>
+  <div class="route-body">
+    <div class="decision-box">
+      <div class="decision-head">Have you validated the full coax route?</div>
+      <div class="decision-body" style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button onclick="alert('Confirm route, terminations and plant before progressing.')" style="padding:12px 18px;border-radius:12px;border:none;background:#E4002B;color:#fff;font-weight:700;cursor:pointer;">No</button>
+        <button onclick="alert('Continue with further route checks.')" style="padding:12px 18px;border-radius:12px;border:none;background:#005EB8;color:#fff;font-weight:700;cursor:pointer;">Yes</button>
+      </div>
+    </div>
+  </div>
+</article>
 
-        <!-- HFC -->
-        <article class="card route-card" id="hfc-repulls">
-          <div class="route-head red">
-            <h3>HFC Repulls</h3>
-            <p>Use the checks below before requesting a full coax repull.</p>
-          </div>
-          <div class="route-body">
+<article class="card route-card" id="reblows">
+  <div class="route-head green">
+    <h3>FTTP / FTTO Reblows</h3>
+    <p>Tap the answer to continue the reblow checks.</p>
+  </div>
+  <div class="route-body">
+    <div class="decision-box">
+      <div class="decision-head">Are you working on the correct tube and route?</div>
+      <div class="decision-body" style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button onclick="alert('Confirm tube path and access points.')" style="padding:12px 18px;border-radius:12px;border:none;background:#E4002B;color:#fff;font-weight:700;cursor:pointer;">No</button>
+        <button onclick="alert('Continue with obstruction identification.')" style="padding:12px 18px;border-radius:12px;border:none;background:#005EB8;color:#fff;font-weight:700;cursor:pointer;">Yes</button>
+      </div>
+    </div>
+  </div>
+</article>
 
-            <div class="decision-box">
-              <div class="decision-head">1. Have you validated the full coax route?</div>
-              <div class="decision-body">
-                <ul>
-                  <li><b>No:</b> Confirm route, terminations and plant.</li>
-                  <li><b>Yes:</b> Continue to Step 2.</li>
-                </ul>
-              </div>
-            </div>
+<article class="card route-card" id="ug-xpon">
+  <div class="route-head">
+    <h3>Underground Maverick XPON</h3>
+    <p><strong>Build Types:</strong> PA2 • PA3 • CUR • PA4</p>
+    <p>Tap the answer to continue the underground validation flow.</p>
+  </div>
+  <div class="route-body">
+    <div class="decision-box">
+      <div class="decision-head">Have you confirmed the duct route and chambers?</div>
+      <div class="decision-body" style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button onclick="alert('Validate duct route and chamber sequence.')" style="padding:12px 18px;border-radius:12px;border:none;background:#E4002B;color:#fff;font-weight:700;cursor:pointer;">No</button>
+        <button onclick="alert('Continue with blockage identification.')" style="padding:12px 18px;border-radius:12px;border:none;background:#005EB8;color:#fff;font-weight:700;cursor:pointer;">Yes</button>
+      </div>
+    </div>
+  </div>
+</article>
 
-            <div class="decision-box">
-              <div class="decision-head">2. Is the fault at a termination, fitting or short section?</div>
-              <div class="decision-body">
-                <ul>
-                  <li><b>Yes:</b> Repair locally or replace short section.</li>
-                  <li><b>No:</b> Continue to Step 3.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="decision-box">
-              <div class="decision-head">3. Is the full route damaged or unusable?</div>
-              <div class="decision-body">
-                <ul>
-                  <li><b>No:</b> Recover route and complete install.</li>
-                  <li><b>Yes:</b> Capture evidence and raise repull.</li>
-                </ul>
-              </div>
-            </div>
-
-          </div>
-        </article>
-
-        <!-- FTTP Reblow -->
-        <article class="card route-card" id="reblows">
-          <div class="route-head green">
-            <h3>FTTP / FTTO Reblows</h3>
-            <p>Use the reblow decision flow before escalating.</p>
-          </div>
-          <div class="route-body">
-
-            <div class="decision-box">
-              <div class="decision-head">1. Are you working on the correct tube and route?</div>
-              <div class="decision-body">
-                <ul>
-                  <li><b>No:</b> Confirm tube path and access points.</li>
-                  <li><b>Yes:</b> Continue to Step 2.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="decision-box">
-              <div class="decision-head">2. Have you identified where the obstruction occurs?</div>
-              <div class="decision-body">
-                <ul>
-                  <li><b>No:</b> Use rod distance or chamber checks to narrow location.</li>
-                  <li><b>Yes:</b> Continue to Step 3.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="decision-box">
-              <div class="decision-head">3. Is the tube recoverable?</div>
-              <div class="decision-body">
-                <ul>
-                  <li><b>Yes:</b> Recover path and continue blow.</li>
-                  <li><b>No:</b> Capture evidence and escalate for reblow or civils.</li>
-                </ul>
-              </div>
-            </div>
-
-          </div>
-        </article>
-
-        <!-- Underground XPON -->
-        <article class="card route-card" id="ug-xpon">
-          <div class="route-head">
-            <h3>Underground Maverick XPON</h3>
-            <p><strong>Applicable build types:</strong> PA2 • PA3 • CUR • PA4</p>
-            <p>Use this flow before raising underground repulls.</p>
-          </div>
-          <div class="route-body">
-
-            <div class="decision-box">
-              <div class="decision-head">1. Have you confirmed the duct route and chambers?</div>
-              <div class="decision-body">
-                <ul>
-                  <li><b>No:</b> Validate route and chamber sequence.</li>
-                  <li><b>Yes:</b> Continue to Step 2.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="decision-box">
-              <div class="decision-head">2. Have you identified the blockage section?</div>
-              <div class="decision-body">
-                <ul>
-                  <li><b>No:</b> Rod and isolate the section.</li>
-                  <li><b>Yes:</b> Continue to Step 3.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="decision-box">
-              <div class="decision-head">3. Can the route be recovered or rerouted?</div>
-              <div class="decision-body">
-                <ul>
-                  <li><b>Yes:</b> Recover route and complete.</li>
-                  <li><b>No:</b> Capture evidence and raise repull.</li>
-                </ul>
-              </div>
-            </div>
-
-          </div>
-        </article>
-
-      </section>
+</section>
 
       <section class="top-grid" style="margin-top:18px;">
         <div class="card">
